@@ -16,7 +16,6 @@ export class ReportsComponent implements OnInit {
   option = '';
 
   constructor() {
-     //this.getTables();
   }
 
   ngOnInit(): void {
@@ -37,19 +36,26 @@ export class ReportsComponent implements OnInit {
     }
   }
 
-  public async loadData() : Promise<void> {
+  public async loadData() {
 
     var resultElement = document.getElementById('resultsDivForQuery');
     let headers: string[] = [];
 
     var url = 'https://cors-anywhere.herokuapp.com/http://wellspringuat.lifecyclesystems.com/private/api/api/sql/';
 
-    axios.get(url+'3F61C052-BACB-4C51-B722-B59BAF97CED1?sql='+this.queryStr)
+    await axios.get(url+'3F61C052-BACB-4C51-B722-B59BAF97CED1?sql='+this.queryStr)
       .then(function (response) {
         console.log(response.data[1].Firstname);
-        resultElement.innerHTML = response.data;
+        for(var i in response.data) {
+          headers.push(response.data[i].Firstname);
+        }
+       console.log("headers is : "+headers);
+
       });
+    for (let i = 0; i < headers.length; i++)
+      resultElement.append((i+1) + ": " + headers[i]);
     resultElement.style.display="block";
+
 
   }
 
