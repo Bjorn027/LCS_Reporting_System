@@ -1,0 +1,52 @@
+<div style="background-color: '#424242'; padding:10px;">
+
+  <input type="radio" value="query" (click)="changeSel('query')" name="selection"> Query
+<input type="radio" value = "wizard" (click)="changeSel('wizard')" name="selection"> Wizard
+
+<div *ngIf="isQuery;">
+<!--  Content to render when condition is true.-->
+  <form id="queryForm">
+      <label> Type in your API Key :</label>
+      <input type="text" name="apiKey" [(ngModel)]="apiKey">
+
+      <br>
+      <label> Type in your Sql Query :</label>
+      <input type="text" name="queryStr" [(ngModel)] ="queryStr">
+
+    <button class="justify-content-between" (click)="loadData()" mat-raised-button color="primary">Get Report </button>
+  </form>
+
+  <div id="resultsDivForQuery">
+    <app-dynamic-data-table></app-dynamic-data-table>
+
+  </div>
+</div>
+
+<div *ngIf="isWizard">
+
+<!--  Content to render when condition is false.-->
+
+  <form name="wizardForm">
+      <label> Please select a table :</label>
+      <select placeholder="Pick here" id="table_drop_down">
+          <option *ngFor="let header of getTables()"> {{ header }} </option>
+
+      </select>
+
+  </form>
+
+  <div id="resultsDivForWizard">
+    Something
+  </div>
+
+</div>
+
+
+
+
+
+
+
+
+
+</div> <!-- end outermost div -->

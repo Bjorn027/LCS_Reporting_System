@@ -1,0 +1,39 @@
+<div>
+  <app-time-series></app-time-series>
+</div>
+
+<mat-divider> </mat-divider>
+<br>
+
+
+<div fxLayout="row" fxLayoutAlign="space-between-center" fxLayoutGap="20px" class="stats-cards">
+  <mat-card fxFlex="33">
+    <app-widget-card label="Leads to Sales" total="225" percentage="50%"></app-widget-card>
+  </mat-card>
+
+
+
+  <mat-card fxFlex="33">
+    <app-widget-card label="Leads YoY comparison" total="515/1922" percentage="40%"></app-widget-card>
+  </mat-card>
+
+  <mat-card fxFlex="33">
+    <app-widget-card label="Sales Target Achievement" percentage="30%"></app-widget-card>
+  </mat-card>
+
+
+</div>
+
+<br>
+<mat-divider>
+</mat-divider>
+<br>
+
+<div fxLayout="row" fxLayoutAlign="space-between-center" fxLayoutGap="20px" style="padding:15px;">
+  <div fxFlex="50"> <app-widget-pie></app-widget-pie> </div>
+  <div fxFlex="50"> <app-widget-data-table> </app-widget-data-table> </div>
+</div>
+
+<br>
+<mat-divider></mat-divider>
+<br>
