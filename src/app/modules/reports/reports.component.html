@@ -16,11 +16,20 @@
     <button class="justify-content-between" (click)="loadData()" mat-raised-button color="primary">Get Report </button>
   </form>
 
-  <div id="resultsDivForQuery">
+  <table class="table table-striped" ngFor="let data of loadedPosts">
+    <thread>
+      <tr>
+        <th *ngFor="let header of getHeaders()"><input type="checkbox"  [(ngModel)]="showColumn">  {{header}}</th> 
+      </tr>
 
-    <app-dynamic-data-table></app-dynamic-data-table>
-
-  </div>
+    <tbody>
+      <tr *ngFor="let data of loadedPosts">           
+        <td *ngFor="let key of getHeaders()"  (click)="goToTable(data.TABLE_NAME)" [hidden]="showColumn"  >{{data[key]}}</td>
+      </tr>
+    </tbody>
+  </thread>
+  </table>
+  <app-dynamic-data-table></app-dynamic-data-table>
 </div>
 
 <div *ngIf="isWizard">
@@ -30,7 +39,7 @@
   <form name="wizardForm">
       <label> Please select a table :</label>
       <select placeholder="Pick here" id="table_drop_down">
-          <option *ngFor="let header of getTables()"> {{ header }} </option>
+          <option *ngFor="let header of getHeaders()"> {{ header }} </option>
 
       </select>
 
