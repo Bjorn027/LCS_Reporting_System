@@ -13,16 +13,20 @@ import { Post } from './post.model';
 export class ReportsComponent implements OnInit {
 
   queryStr = "";
-  apiKey = '';
+  apiKey = '3F61C052-BACB-4C51-B722-B59BAF97CED1';
   isQuery = false;
   isWizard = false;
   option = '';
   loadedPosts: Post[] = [];
+  loadedTables: Post[] = []
+ 
 
   constructor(private http: HttpClient) {
   }
 
   ngOnInit(): void {
+    this.tableSource()
+    
   }
 
   changeSel(selection){
@@ -39,6 +43,21 @@ export class ReportsComponent implements OnInit {
     //  alert('isWizard is :'+this.isWizard);
     }
   }
+
+  private fetchTables(){
+    this.http.get< {[key: string]: Post}>("https://cors-anywhere.herokuapp.com/http://wellspringuat.lifecyclesystems.com/private/api/api/sql/"+ this.apiKey + "?sql=SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_TYPE='BASE TABLE'").pipe(map(responseData =>{
+      const postArray: Post[] = [];
+      for (const key in responseData){
+        if (responseData.hasOwnProperty(key)){
+        postArray.push({ ...responseData[key], id: key });
+        }
+      }
+      return postArray;
+    })).subscribe(posts => {this.loadedPosts = posts}
+      );
+  }
+
+
 
   public async loadData() {
 
@@ -75,6 +94,19 @@ export class ReportsComponent implements OnInit {
   goToTable(key){
     this.queryStr = "SELECT * FROM INFORMATION_SCHEMA.COLUMNS ic Where ic.TABLE_NAME = '"+ key + "'"
     this.loadData()
+  }
+
+  tableSource(){
+    this.http.get< {[key: string]: Post}>("https://cors-anywhere.herokuapp.com/http://wellspringuat.lifecyclesystems.com/private/api/api/sql/"+ this.apiKey + "?sql=SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_TYPE='BASE TABLE'").pipe(map(responseData =>{
+      const postArray: Post[] = [];
+      for (const key in responseData){
+        if (responseData.hasOwnProperty(key)){
+        postArray.push({ ...responseData[key], id: key });
+        }
+      }
+      return postArray;
+    })).subscribe(posts => {this.loadedTables = posts}
+      );
   }
 
 }

@@ -16,7 +16,7 @@
     <button class="justify-content-between" (click)="loadData()" mat-raised-button color="primary">Get Report </button>
   </form>
 
-  <table class="table table-striped" ngFor="let data of loadedPosts">
+  <table class="table table-striped">
     <thread>
       <tr>
         <th *ngFor="let header of getHeaders()"><input type="checkbox"  [(ngModel)]="showColumn">  {{header}}</th> 
@@ -36,18 +36,34 @@
 
 <!--  Content to render when condition is false.-->
 
-  <form name="wizardForm">
+  <form name="wizardForm" >
       <label> Please select a table :</label>
-      <select placeholder="Pick here" id="table_drop_down">
-          <option *ngFor="let header of getHeaders()"> {{ header }} </option>
-
+      <select (change)="goToTable($event.target.value)" >
+        <option [ngValue]="null">Select Table</option>
+        <option *ngFor="let data of loadedTables"
+        
+           >
+          {{data.TABLE_NAME}}
+      </option>
       </select>
-
+      <button class="justify-content-between" (click)="fetchTables()" mat-raised-button color="primary">Tables Main </button>
+      
   </form>
 
-  <div id="resultsDivForWizard">
-    Something
-  </div>
+  
+  <table class="table table-striped" ngFor="let data of loadedPosts">
+    <thread>
+      <tr>
+        <th *ngFor="let header of getHeaders()"><input type="checkbox"  [(ngModel)]="showColumn">  {{header}}</th> 
+      </tr>
+
+    <tbody>
+      <tr *ngFor="let data of loadedPosts">           
+        <td *ngFor="let key of getHeaders()"  [hidden]="showColumn"  >{{data[key]}}</td>
+      </tr>
+    </tbody>
+  </thread>
+  </table>
 
 </div>
 
