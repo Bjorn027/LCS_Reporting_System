@@ -17,9 +17,18 @@ export class ReportsComponent implements OnInit {
   isQuery = false;
   isWizard = false;
   option = '';
+  url = 'https://cors-anywhere.herokuapp.com/http://wellspringuat.lifecyclesystems.com/private/api/api/sql/';
   loadedPosts: Post[] = [];
-  loadedTables: Post[] = []
- 
+  loadedPosts2: Post[] = [];
+  loadedTables: Post[] = [];
+  tableID1 = "";
+  tableID2 = "";
+  columnID1 = "";
+  columnID2 = "";
+  joinID = "";
+  isTable = false;
+  isColumn = false;
+  isColumn2 = false;
 
   constructor(private http: HttpClient) {
   }
@@ -55,15 +64,15 @@ export class ReportsComponent implements OnInit {
       return postArray;
     })).subscribe(posts => {this.loadedPosts = posts}
       );
+      this.isTable = true;
+      this.isColumn = false;
   }
 
 
 
   public async loadData() {
 
-    var url = 'https://cors-anywhere.herokuapp.com/http://wellspringuat.lifecyclesystems.com/private/api/api/sql/';
-
-    this.http.get< {[key: string]: Post}>(url+'3F61C052-BACB-4C51-B722-B59BAF97CED1?sql='+this.queryStr).pipe(map(responseData =>{
+    this.http.get< {[key: string]: Post}>(this.url+ this.apiKey + '?sql='+this.queryStr).pipe(map(responseData =>{
       const postArray: Post[] = [];
       for (const key in responseData){
         if (responseData.hasOwnProperty(key)){
@@ -73,9 +82,33 @@ export class ReportsComponent implements OnInit {
       return postArray;
     })).subscribe(posts => {this.loadedPosts = posts}
       );
-    
+  }
 
+  loadData2(){
+    this.http.get< {[key: string]: Post}>(this.url+ this.apiKey + '?sql='+this.queryStr).pipe(map(responseData =>{
+      const postArray: Post[] = [];
+      for (const key in responseData){
+        if (responseData.hasOwnProperty(key)){
+        postArray.push({ ...responseData[key], id: key });
+        }
+      }
+      return postArray;
+    })).subscribe(posts => {this.loadedPosts2 = posts}
+      );
+  }
 
+  joinTables(){
+
+    this.http.get< {[key: string]: Post}>(this.url+"3F61C052-BACB-4C51-B722-B59BAF97CED1?sql=SELECT" + this.tableID1 + "." + this.columnID1 + "," + this.tableID2 + "." + this.columnID2 + "FROM" + this.tableID1 + "INNER JOIN" + this.tableID2 + "ON" + this.tableID1 + "." + this.joinID + "=" + this.tableID2 + "." + this.joinID ).pipe(map(responseData =>{
+      const postArray: Post[] = [];
+      for (const key in responseData){
+        if (responseData.hasOwnProperty(key)){
+        postArray.push({ ...responseData[key], id: key });
+        }
+      }
+      return postArray;
+    })).subscribe(posts => {this.loadedPosts = posts}
+      );
   }
 
   getHeaders() {
@@ -91,10 +124,22 @@ export class ReportsComponent implements OnInit {
     }
     return headers;
   }
+  
   goToTable(key){
     this.queryStr = "SELECT * FROM INFORMATION_SCHEMA.COLUMNS ic Where ic.TABLE_NAME = '"+ key + "'"
     this.loadData()
+    this.isTable = false;
+    this.isColumn = true;
   }
+
+  goToTable2(key){
+    this.queryStr = "SELECT * FROM INFORMATION_SCHEMA.COLUMNS ic Where ic.TABLE_NAME = '"+ key + "'"
+    this.loadData2()
+    this.isTable = false;
+    this.isColumn2 = true;
+  }
+
+
 
   tableSource(){
     this.http.get< {[key: string]: Post}>("https://cors-anywhere.herokuapp.com/http://wellspringuat.lifecyclesystems.com/private/api/api/sql/"+ this.apiKey + "?sql=SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_TYPE='BASE TABLE'").pipe(map(responseData =>{
