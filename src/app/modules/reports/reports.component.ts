@@ -20,6 +20,8 @@ export class ReportsComponent implements OnInit {
   url = 'https://cors-anywhere.herokuapp.com/http://wellspringuat.lifecyclesystems.com/private/api/api/sql/';
   loadedPosts: Post[] = [];
   loadedPosts2: Post[] = [];
+  loadedPosts3: Post[] = [];
+  loadedPosts4: Post[] = [];
   loadedTables: Post[] = [];
   tableID1 = "";
   tableID2 = "";
@@ -29,6 +31,11 @@ export class ReportsComponent implements OnInit {
   isTable = false;
   isColumn = false;
   isColumn2 = false;
+  isColumn3 = false;
+  isColumn4 = false;
+  showTable2 = true;
+  showTable3 = true;
+  showTable4 = true;
 
   constructor(private http: HttpClient) {
   }
@@ -97,6 +104,32 @@ export class ReportsComponent implements OnInit {
       );
   }
 
+  loadData3(){
+    this.http.get< {[key: string]: Post}>(this.url+ this.apiKey + '?sql='+this.queryStr).pipe(map(responseData =>{
+      const postArray: Post[] = [];
+      for (const key in responseData){
+        if (responseData.hasOwnProperty(key)){
+        postArray.push({ ...responseData[key], id: key });
+        }
+      }
+      return postArray;
+    })).subscribe(posts => {this.loadedPosts3 = posts}
+      );
+  }
+
+  loadData4(){
+    this.http.get< {[key: string]: Post}>(this.url+ this.apiKey + '?sql='+this.queryStr).pipe(map(responseData =>{
+      const postArray: Post[] = [];
+      for (const key in responseData){
+        if (responseData.hasOwnProperty(key)){
+        postArray.push({ ...responseData[key], id: key });
+        }
+      }
+      return postArray;
+    })).subscribe(posts => {this.loadedPosts4 = posts}
+      );
+  }
+
   joinTables(){
 
     this.http.get< {[key: string]: Post}>(this.url+"3F61C052-BACB-4C51-B722-B59BAF97CED1?sql=SELECT" + this.tableID1 + "." + this.columnID1 + "," + this.tableID2 + "." + this.columnID2 + "FROM" + this.tableID1 + "INNER JOIN" + this.tableID2 + "ON" + this.tableID1 + "." + this.joinID + "=" + this.tableID2 + "." + this.joinID ).pipe(map(responseData =>{
@@ -137,6 +170,20 @@ export class ReportsComponent implements OnInit {
     this.loadData2()
     this.isTable = false;
     this.isColumn2 = true;
+  }
+
+  goToTable3(key){
+    this.queryStr = "SELECT * FROM INFORMATION_SCHEMA.COLUMNS ic Where ic.TABLE_NAME = '"+ key + "'"
+    this.loadData3()
+    this.isTable = false;
+    this.isColumn3 = true;
+  }
+
+  goToTable4(key){
+    this.queryStr = "SELECT * FROM INFORMATION_SCHEMA.COLUMNS ic Where ic.TABLE_NAME = '"+ key + "'"
+    this.loadData4()
+    this.isTable = false;
+    this.isColumn4 = true;
   }
 
 
