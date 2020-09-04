@@ -3,34 +3,43 @@
   <input type="radio" value="query" (click)="changeSel('query')" name="selection"> Query
 <input type="radio" value = "wizard" (click)="changeSel('wizard')" name="selection"> Wizard
 
-<div *ngIf="isQuery;">
-<!--  Content to render when condition is true.-->
-  <form id="queryForm">
+  <div *ngIf="isQuery;">
+    <!--  Content to render when condition is true.-->
+    <form id="queryForm">
       <label> Type in your API Key :</label>
-      <input type="text" name="apiKey" [(ngModel)]="apiKey"> 
+      <input type="text" name="apiKey" [(ngModel)]="apiKey">
 
       <br>
       <label> Type in your Sql Query :</label>
       <input type="text" name="queryStr" [(ngModel)] ="queryStr">
 
-    <button class="justify-content-between" (click)="loadData()" mat-raised-button color="primary">Get Report </button>
-  </form>
 
-  <table class="table table-striped">
-    <thread>
-      <tr>
-        <th *ngFor="let header of getHeaders()"><input type="checkbox"  [(ngModel)]="showColumn">  {{header}}</th> 
-      </tr>
+    </form>
 
-    <tbody>
-      <tr *ngFor="let data of loadedPosts">           
-        <td *ngFor="let key of getHeaders()"  (click)="goToTable(data.TABLE_NAME)" [hidden]="showColumn"  >{{data[key]}}</td>
-      </tr>
-    </tbody>
-  </thread>
-  </table>
-  <app-dynamic-data-table></app-dynamic-data-table>
-</div>
+    <label> Chart / Data Table ?</label>
+    <input type="radio" value="chart"  name="sel"> Chart
+    <input type="radio" value = "data-table" name="sel"> Data Table
+
+    <br><br>
+
+    <button class="justify-content-between" [disabled]="!queryStr || !apiKey" (click)="loadData()" mat-raised-button color="primary">Get Report </button>
+
+
+    <table class="table table-striped">
+      <thread>
+        <tr>
+          <th *ngFor="let header of getHeaders()"><input type="checkbox"  [(ngModel)]="showColumn">  {{header}}</th>
+        </tr>
+
+        <tbody>
+        <tr *ngFor="let data of loadedPosts">
+          <td *ngFor="let key of getHeaders()"  (click)="goToTable(data.TABLE_NAME)" [hidden]="showColumn"  >{{data[key]}}</td>
+        </tr>
+        </tbody>
+      </thread>
+    </table>
+    <!--  <app-dynamic-data-table></app-dynamic-data-table>-->
+  </div>
 
 <div *ngIf="isWizard">
 
@@ -41,73 +50,73 @@
       <select (change)="goToTable($event.target.value)" >
         <option [ngValue]="null">Select Table</option>
         <option *ngFor="let data of loadedTables"
-        
+
            >
           {{data.TABLE_NAME}}
       </option>
       </select>
       <button class="justify-content-between" (click)="showTable2 = !showTable2" *ngIf="showTable2" mat-raised-button color="primary">Add Table </button>
-      
-      
+
+
   </form>
-  
+
   <form name="wizardForm" [hidden]="showTable2" id="table2" >
     <label> Please select 2nd Table :</label>
     <select (change)="goToTable2($event.target.value)" >
       <option [ngValue]="null">Select Table</option>
       <option *ngFor="let data of loadedTables"
-      
+
          >
         {{data.TABLE_NAME}}
     </option>
     </select>
     <button class="justify-content-between" (click)="showTable3 = !showTable3" *ngIf="showTable3" mat-raised-button color="primary">Add Table </button>
     <button class="justify-content-between" (click)="showTable2 = !showTable2" *ngIf="!showTable2" mat-raised-button color="primary">Remove Table </button>
-    
+
   </form>
-  
+
   <form name="wizardForm" [hidden]="showTable3" id="table3" >
     <label> Please select 3rd Table :</label>
     <select (change)="goToTable3($event.target.value)" >
       <option [ngValue]="null">Select Table</option>
       <option *ngFor="let data of loadedTables"
-      
+
          >
         {{data.TABLE_NAME}}
     </option>
     </select>
     <button class="justify-content-between" (click)="showTable4 = !showTable4" *ngIf="showTable4" mat-raised-button color="primary">Add Table </button>
     <button class="justify-content-between" (click)="showTable3 = !showTable3" *ngIf="!showTable3" mat-raised-button color="primary">Remove Table </button>
-    
+
   </form>
-  
+
   <form name="wizardForm" [hidden]="showTable4" id="table4" >
     <label> Please select 4th Table :</label>
     <select (change)="goToTable4($event.target.value)" >
       <option [ngValue]="null">Select Table</option>
       <option *ngFor="let data of loadedTables"
-      
+
          >
         {{data.TABLE_NAME}}
     </option>
     </select>
-    
+
     <button class="justify-content-between" (click)="showTable4 = !showTable4" *ngIf="!showTable4" mat-raised-button color="primary">Remove Table </button>
-    
+
   </form>
 
   <button class="justify-content-between" (click)="joinTables()" mat-raised-button color="primary">Generate </button>
 
-  
+
   <table class="table table-striped">
     <thread>
       <tr>
-        <th *ngIf="isTable">Table</th> 
-        <th *ngIf="isColumn">Select Columns</th> 
+        <th *ngIf="isTable">Table</th>
+        <th *ngIf="isColumn">Select Columns</th>
       </tr>
 
     <tbody>
-      <tr *ngFor="let data of loadedPosts">           
+      <tr *ngFor="let data of loadedPosts">
         <td *ngIf="isTable" ><input type="checkbox" >{{data.TABLE_NAME}}</td>
         <td *ngIf="isColumn" ><input type="checkbox" >{{data.COLUMN_NAME}}</td>
       </tr>
@@ -118,12 +127,12 @@
   <table class="table table-striped">
     <thread>
       <tr>
-        <th *ngIf="isTable">Table</th> 
-        <th *ngIf="isColumn2">Select Columns</th> 
+        <th *ngIf="isTable">Table</th>
+        <th *ngIf="isColumn2">Select Columns</th>
       </tr>
 
     <tbody>
-      <tr *ngFor="let data of loadedPosts2">           
+      <tr *ngFor="let data of loadedPosts2">
         <td *ngIf="isTable" ><input type="checkbox" >{{data.TABLE_NAME}}</td>
         <td *ngIf="isColumn2" ><input type="checkbox" >{{data.COLUMN_NAME}}</td>
       </tr>
@@ -134,12 +143,12 @@
   <table class="table table-striped">
     <thread>
       <tr>
-        <th *ngIf="isTable">Table</th> 
-        <th *ngIf="isColumn3">Select Columns</th> 
+        <th *ngIf="isTable">Table</th>
+        <th *ngIf="isColumn3">Select Columns</th>
       </tr>
 
     <tbody>
-      <tr *ngFor="let data of loadedPosts3">           
+      <tr *ngFor="let data of loadedPosts3">
         <td *ngIf="isTable" ><input type="checkbox" >{{data.TABLE_NAME}}</td>
         <td *ngIf="isColumn3" ><input type="checkbox" >{{data.COLUMN_NAME}}</td>
       </tr>
@@ -150,12 +159,12 @@
   <table class="table table-striped">
     <thread>
       <tr>
-        <th *ngIf="isTable">Table</th> 
-        <th *ngIf="isColumn4">Select Columns</th> 
+        <th *ngIf="isTable">Table</th>
+        <th *ngIf="isColumn4">Select Columns</th>
       </tr>
 
     <tbody>
-      <tr *ngFor="let data of loadedPosts4">           
+      <tr *ngFor="let data of loadedPosts4">
         <td *ngIf="isTable" ><input type="checkbox" >{{data.TABLE_NAME}}</td>
         <td *ngIf="isColumn4" ><input type="checkbox" >{{data.COLUMN_NAME}}</td>
       </tr>

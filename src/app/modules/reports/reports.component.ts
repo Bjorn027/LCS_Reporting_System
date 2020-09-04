@@ -36,13 +36,14 @@ export class ReportsComponent implements OnInit {
   showTable2 = true;
   showTable3 = true;
   showTable4 = true;
+  showColumn = false;
 
   constructor(private http: HttpClient) {
   }
 
   ngOnInit(): void {
     this.tableSource()
-    
+
   }
 
   changeSel(selection){
@@ -157,7 +158,7 @@ export class ReportsComponent implements OnInit {
     }
     return headers;
   }
-  
+
   goToTable(key){
     this.queryStr = "SELECT * FROM INFORMATION_SCHEMA.COLUMNS ic Where ic.TABLE_NAME = '"+ key + "'"
     this.loadData()
